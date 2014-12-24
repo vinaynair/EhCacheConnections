@@ -1,0 +1,12 @@
+<ehcache name="cacheManagerOne" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+
+    <cache name="testDecoratedCacheOne" maxBytesLocalHeap="1000">
+        <cacheDecoratorFactory
+                class="org.terracotta.connections.ehcache.decorator.ReadThroughWithPutWriterDelegtatedCacheFactory"
+                properties="connector=org.terracotta.connections.test.HashMapStoreConnector"
+                propertySeparator=","/>
+    </cache>
+
+</ehcache>
