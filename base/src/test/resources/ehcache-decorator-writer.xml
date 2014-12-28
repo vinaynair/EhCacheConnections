@@ -5,7 +5,7 @@
     <cache name="testDecoratedCacheOne" maxBytesLocalHeap="1000">
         <cacheDecoratorFactory
                 class="org.terracotta.connections.ehcache.decorator.ReadThroughWithPutWriterDelegtatedCacheFactory"
-                properties="connector=org.terracotta.connections.test.HashMapStoreConnector"
+                properties="config=/hashmap-connector.properties"
                 propertySeparator=","/>
     </cache>
 

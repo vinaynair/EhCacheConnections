@@ -1,7 +1,8 @@
 package org.terracotta.connections.test;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terracotta.connections.StoreConnector;
-
 
 import java.util.*;
 
@@ -9,8 +10,9 @@ import java.util.*;
  * Created by vinay on 12/23/14.
  */
 public class HashMapStoreConnector implements StoreConnector<String, String> {
+    private static Logger LOG = LoggerFactory.getLogger(HashMapStoreConnector.class);
 
-
+    private Properties properties;
     // Writer implementation
     //================
     public Map<String, String> INTERNAL_MAP = new HashMap<String, String>();
@@ -46,11 +48,21 @@ public class HashMapStoreConnector implements StoreConnector<String, String> {
 
     @Override
     public void initialize(Properties properties) {
-
+        this.properties=properties;
+        LOG.debug("Initialized");
     }
 
     @Override
     public void dispose() {
+        LOG.debug("Disposed");
 
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

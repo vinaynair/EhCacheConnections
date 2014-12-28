@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terracotta.connections.StoreConnector;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -17,11 +18,20 @@ public class ReadThroughWithPutWriterDelegtatedCacheFactory extends CacheDecorat
     @Override
     public Ehcache createDecoratedEhcache(Ehcache ehcache, Properties properties) {
         LOG.debug("Creating decorate cache for {}", ehcache.getName());
-        String strStoreConnectorClass = (String) properties.get("connector");
+        String config = (String) properties.get("config");
+        Properties prop = new Properties();
         try {
+            prop.load(getClass().getResourceAsStream(config));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Connector config file " + config + " not found");
+        }
+        try {
+            String strStoreConnectorClass = prop.getProperty("connector.class");
             Class storeConnectorClass = Class.forName(strStoreConnectorClass);
-            Ehcache cache = new ReadThroughWithPutWriterDelegtatedCache(ehcache, (StoreConnector) storeConnectorClass.newInstance(), properties);
-            ehcache.getCacheManager().replaceCacheWithDecoratedCache(ehcache, cache);
+            StoreConnector storeConnector=(StoreConnector) storeConnectorClass.newInstance();
+            Ehcache cache = new ReadThroughWithPutWriterDelegtatedCache(ehcache, storeConnector, prop);
+            //ehcache.getCacheManager().replaceCacheWithDecoratedCache(ehcache, cache);
             return cache;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

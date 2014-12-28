@@ -4,6 +4,8 @@ import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.constructs.EhcacheDecoratorAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terracotta.connections.StoreConnector;
 import org.terracotta.connections.StoreWriter;
 import org.terracotta.connections.ehcache.writer.DelegatingCacheWriter;
@@ -19,6 +21,7 @@ import java.util.Properties;
  * @author vinay
  */
 public class ReadThroughWithPutWriterDelegtatedCache<K, V> extends EhcacheDecoratorAdapter {
+    private static Logger LOG = LoggerFactory.getLogger(ReadThroughWithPutWriterDelegtatedCache.class);
     protected StoreConnector<K, V> storeConnector;
     protected Properties properties;
 
@@ -26,19 +29,24 @@ public class ReadThroughWithPutWriterDelegtatedCache<K, V> extends EhcacheDecora
         super(underlyingCache);
         this.storeConnector = storeConnector;
         this.properties=properties;
+        storeConnector.initialize(this.properties);
         underlyingCache.registerCacheWriter(new DelegatingCacheWriter(storeConnector));
     }
 
+    /**
+     * TODO: Not called. why?
+     */
     @Override
     public void initialise() {
         super.initialise();
-        storeConnector.initialize(this.properties);
+        LOG.debug("Initialized");
     }
 
     @Override
     public void dispose() throws IllegalStateException {
         super.dispose();
         storeConnector.dispose();
+        LOG.debug("disposed");
     }
 
     public StoreConnector<K, V> getStoreConnector() {

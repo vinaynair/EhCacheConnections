@@ -29,7 +29,11 @@ public class CacheConfigTest {
         Assert.assertEquals(ReadThroughWithPutWriterDelegtatedCache.class, cache.getClass());
         readThroughWithPutWriterDelegtatedCache = (ReadThroughWithPutWriterDelegtatedCache) cache;
         hashMapStoreConnector = (HashMapStoreConnector) readThroughWithPutWriterDelegtatedCache.getStoreConnector();
+        //Check that the connector received the set properties
+        Assert.assertNotNull(hashMapStoreConnector.getProperties());
+        Assert.assertTrue(hashMapStoreConnector.getProperties().getProperty("test.property").equals("test.value"));
         hashMapStoreConnector.INTERNAL_MAP.clear();
+
 
     }
 
