@@ -33,8 +33,6 @@ public class CacheConfigTest {
         Assert.assertNotNull(hashMapStoreConnector.getProperties());
         Assert.assertTrue(hashMapStoreConnector.getProperties().getProperty("test.property").equals("test.value"));
         hashMapStoreConnector.INTERNAL_MAP.clear();
-
-
     }
 
     @Test
